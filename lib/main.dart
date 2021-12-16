@@ -771,10 +771,17 @@ Future<void> main() async {
     final camerasAvailables = await availableCameras();
 
     for (final camera in camerasAvailables) {
-      if (cameras.firstWhere((element) => element.lensDirection == camera.lensDirection) != null) {
-        cameras.add(camera);
-      }
+      print(camera.hashCode);
     }
+
+    final firstCamera = camerasAvailables.firstWhere((cam) => cam.lensDirection.toString().contains('front'),
+        orElse: () => camerasAvailables.first);
+
+    final lastCamera = camerasAvailables.firstWhere((cam) => cam.lensDirection.toString().contains('back'),
+        orElse: () => camerasAvailables.last);
+
+    cameras.add(firstCamera);
+    cameras.add(lastCamera);
   } on CameraException catch (e) {
     logError(e.code, e.description);
   }
